@@ -1,7 +1,6 @@
 package mtime
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -20,24 +19,20 @@ func TestSetMineTimeUnix(t *testing.T) {
 	}{
 		// TODO: Add test cases.
 		{
-			name:    "pos",
-			args:    args{msec: msec1},
-			wantErr: false,
+			name: "neg",
+			args: args{msec: msec2},
 		},
 		{
-			name:    "neg",
-			args:    args{msec: msec2},
-			wantErr: false,
+			name: "pos",
+			args: args{msec: msec1},
 		},
 	}
+	t.Logf("tests=%+v", tests)
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			err := SetMineTimeUnix(tt.args.msec)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("SetMineTimeUnix() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			assert.Equal(t, time.Now().Unix(), tt.args.msec/1000)
+			SetMineTimeUnix(tt.args.msec)
+			assert.Equal(t, tt.args.msec/1000, time.Now().Unix())
 		})
 	}
 }
@@ -49,25 +44,22 @@ func TestSetMineTime(t *testing.T) {
 	t1 := time.Now().Add(24 * time.Hour)
 	t2 := time.Now().Add(-24 * time.Hour)
 	tests := []struct {
-		name    string
-		args    args
-		wantErr assert.ErrorAssertionFunc
+		name string
+		args args
 	}{
 		// TODO: Add test cases.
 		{
-			name:    "pos",
-			args:    args{t: t1},
-			wantErr: nil,
+			name: "pos",
+			args: args{t: t1},
 		},
 		{
-			name:    "neg",
-			args:    args{t: t2},
-			wantErr: nil,
+			name: "neg",
+			args: args{t: t2},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.wantErr(t, SetMineTime(tt.args.t), fmt.Sprintf("SetMineTime(%v)", tt.args.t))
+			SetMineTime(tt.args.t)
 			assert.Equal(t, tt.args.t.Unix(), time.Now().Unix())
 		})
 	}
